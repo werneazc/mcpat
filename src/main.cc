@@ -81,8 +81,8 @@ int main(int argc, char *argv[]) {
   if (opt.serialization_create) {
     proc.init(p1);
     save(proc, opt.serialization_file);
-    std::cout << "Checkpoint generated @: " << opt.serialization_file << "\n";
-    return 0;
+    //std::cout << "Checkpoint generated @: " << opt.serialization_file << "\n";
+    //return 0;
   } else if (opt.serialization_restore) {
     restore(proc, opt.serialization_file);
     proc.init(p1, true);
