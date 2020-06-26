@@ -426,4 +426,6 @@ void ArrayST::leakage_feedback(
   }
 }
 
-ArrayST::~ArrayST() { local_result.cleanup(); }
+ArrayST::~ArrayST() {
+  // local_result.cleanup();
+}
