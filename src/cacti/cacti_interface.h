@@ -38,6 +38,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/utility.hpp>
+#include <cmath>
 #include <iostream>
 #include <list>
 #include <map>
@@ -65,17 +66,47 @@ public:
         longer_channel_leakage(0), power_gated_leakage(0),
         power_gated_with_long_channel_leakage(0) {}
   powerComponents(const powerComponents &obj) { *this = obj; }
+
   powerComponents &operator=(const powerComponents &rhs) {
-    dynamic = rhs.dynamic;
-    leakage = rhs.leakage;
-    gate_leakage = rhs.gate_leakage;
-    short_circuit = rhs.short_circuit;
-    longer_channel_leakage = rhs.longer_channel_leakage;
-    power_gated_leakage = rhs.power_gated_leakage;
-    power_gated_with_long_channel_leakage =
-        rhs.power_gated_with_long_channel_leakage;
+    if (std::isnan(rhs.dynamic)) {
+      dynamic = 0.0;
+    } else {
+      dynamic = rhs.dynamic;
+    }
+    if (std::isnan(rhs.leakage)) {
+      leakage = 0.0;
+    } else {
+      leakage = rhs.leakage;
+    }
+    if (std::isnan(rhs.gate_leakage)) {
+      gate_leakage = 0.0;
+    } else {
+      gate_leakage = rhs.gate_leakage;
+    }
+    if (std::isnan(rhs.short_circuit)) {
+      short_circuit = 0.0;
+    } else {
+      short_circuit = rhs.short_circuit;
+    }
+    if (std::isnan(rhs.longer_channel_leakage)) {
+      longer_channel_leakage = 0.0;
+    } else {
+      longer_channel_leakage = rhs.longer_channel_leakage;
+    }
+    if (std::isnan(rhs.power_gated_leakage)) {
+      power_gated_leakage = 0.0;
+    } else {
+      power_gated_leakage = rhs.power_gated_leakage;
+    }
+    if (std::isnan(rhs.power_gated_with_long_channel_leakage)) {
+      power_gated_with_long_channel_leakage = 0.0;
+    } else {
+      power_gated_with_long_channel_leakage =
+          rhs.power_gated_with_long_channel_leakage;
+    }
     return *this;
   }
+
   void reset() {
     dynamic = 0;
     leakage = 0;
