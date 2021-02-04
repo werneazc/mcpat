@@ -61,6 +61,9 @@ void MCFrontEnd::set_params(const ParseXML *XML,
                             InputParameter *interface_ip_,
                             const MCParam &mcp_,
                             enum MemoryCtrl_type mc_type_) {
+
+
+                              
   fe_ip = *interface_ip_;
   rb_ip = *interface_ip_;
   wb_ip = *interface_ip_;

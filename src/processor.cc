@@ -37,6 +37,7 @@
 #include "parameter.h"
 #include "version.h"
 
+#include <chrono>
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -576,6 +577,389 @@ void Processor::init(const ParseXML *XML, bool cp) {
   }
 }
 
+void Processor::compute(){
+  reset();
+  
+  this->XML = XML;
+  int i;
+  double pppm_t[4] = {1, 1, 1, 1};
+  
+  for (i = 0; i < numCore; i++) {
+    // cores[i].set_params(XML, i, &interface_ip, true);
+    cores[i].set_stats(XML);
+    cores[i].computeDynamicPower();
+    cores[i].computeDynamicPower(false);
+
+    if (procdynp.homoCore) {
+      set_pppm(pppm_t,
+               cores[i].clockRate * procdynp.numCore,
+               procdynp.numCore,
+               procdynp.numCore,
+               procdynp.numCore);
+      core.power = core.power + cores[i].power * pppm_t;
+      set_pppm(pppm_t,
+               1 / cores[i].executionTime,
+               procdynp.numCore,
+               procdynp.numCore,
+               procdynp.numCore);
+      core.rt_power = core.rt_power + cores[i].rt_power * pppm_t;
+      power = power + core.power;
+      rt_power = rt_power + core.rt_power;
+    }
+    else {
+      set_pppm(pppm_t, cores[i].clockRate, 1, 1, 1);
+      core.power = core.power + cores[i].power * pppm_t;
+      power = power + cores[i].power * pppm_t;
+
+      set_pppm(pppm_t, 1 / cores[i].executionTime, 1, 1, 1);
+      core.rt_power = core.rt_power + cores[i].rt_power * pppm_t;
+      rt_power = rt_power + cores[i].rt_power * pppm_t;
+    }
+  }
+
+  if (!XML->sys.Private_L2) {
+    if (numL2 > 0) {
+      for (i = 0; i < numL2; i++) {
+        // l2array[i].set_params(XML, i, &interface_ip);
+        l2array[i].set_stats(XML);
+
+        l2array[i].computeStaticPower(true);
+        l2array[i].computeStaticPower();
+        if (procdynp.homoL2) {
+          set_pppm(pppm_t,
+                   l2array[i].cachep.clockRate * procdynp.numL2,
+                   procdynp.numL2,
+                   procdynp.numL2,
+                   procdynp.numL2);
+          l2.power = l2.power + l2array[i].power * pppm_t;
+
+          set_pppm(pppm_t,
+                   1 / l2array[i].cachep.executionTime,
+                   procdynp.numL2,
+                   procdynp.numL2,
+                   procdynp.numL2);
+          l2.rt_power = l2.rt_power + l2array[i].rt_power * pppm_t;
+
+          power = power + l2.power;
+          rt_power = rt_power + l2.rt_power;
+        }
+        else {
+          set_pppm(pppm_t, l2array[i].cachep.clockRate, 1, 1, 1);
+          l2.power = l2.power + l2array[i].power * pppm_t;
+          power = power + l2array[i].power * pppm_t;
+          
+          set_pppm(pppm_t, 1 / l2array[i].cachep.executionTime, 1, 1, 1);
+          l2.rt_power = l2.rt_power + l2array[i].rt_power * pppm_t;
+          rt_power = rt_power + l2array[i].rt_power * pppm_t;
+        }
+      }
+    }
+  }
+
+  if (numL3 > 0) {
+    for (i = 0; i < numL3; i++) {
+      // l3array[i].set_params(XML, i, &interface_ip, L3);
+      l3array[i].set_stats(XML);
+
+      l3array[i].computeStaticPower(true);
+      l3array[i].computeStaticPower();
+      if (procdynp.homoL3) {
+        set_pppm(pppm_t,
+                 l3array[i].cachep.clockRate * procdynp.numL3,
+                 procdynp.numL3,
+                 procdynp.numL3,
+                 procdynp.numL3);
+        l3.power = l3.power + l3array[i].power * pppm_t;
+
+        set_pppm(pppm_t,
+                 1 / l3array[i].cachep.executionTime,
+                 procdynp.numL3,
+                 procdynp.numL3,
+                 procdynp.numL3);
+        l3.rt_power = l3.rt_power + l3array[i].rt_power * pppm_t;
+
+        power = power + l3.power;
+        rt_power = rt_power + l3.rt_power;
+
+      } else {
+        set_pppm(pppm_t, l3array[i].cachep.clockRate, 1, 1, 1);
+        l3.power = l3.power + l3array[i].power * pppm_t;
+        power = power + l3array[i].power * pppm_t;
+
+        set_pppm(pppm_t, 1 / l3array[i].cachep.executionTime, 1, 1, 1);
+        l3.rt_power = l3.rt_power + l3array[i].rt_power * pppm_t;
+        rt_power = rt_power + l3array[i].rt_power * pppm_t;
+      }
+    }
+  }
+  if (numL1Dir > 0) {
+    for (i = 0; i < numL1Dir; i++) {
+      // l1dirarray[i].set_params(XML, i, &interface_ip, L1Directory);
+      l1dirarray[i].set_stats(XML);
+
+      l1dirarray[i].computeStaticPower(true);
+      l1dirarray[i].computeStaticPower();
+      
+      if (procdynp.homoL1Dir) {
+
+        set_pppm(pppm_t,
+                 l1dirarray[i].cachep.clockRate * procdynp.numL1Dir,
+                 procdynp.numL1Dir,
+                 procdynp.numL1Dir,
+                 procdynp.numL1Dir);
+        l1dir.power = l1dir.power + l1dirarray[i].power * pppm_t;
+
+        set_pppm(pppm_t,
+                 1 / l1dirarray[i].cachep.executionTime,
+                 procdynp.numL1Dir,
+                 procdynp.numL1Dir,
+                 procdynp.numL1Dir);
+        l1dir.rt_power = l1dir.rt_power + l1dirarray[i].rt_power * pppm_t;
+
+        power = power + l1dir.power;
+        rt_power = rt_power + l1dir.rt_power;
+
+      } else {
+        set_pppm(pppm_t, l1dirarray[i].cachep.clockRate, 1, 1, 1);
+        l1dir.power = l1dir.power + l1dirarray[i].power * pppm_t;
+        power = power + l1dirarray[i].power;
+
+        set_pppm(pppm_t, 1 / l1dirarray[i].cachep.executionTime, 1, 1, 1);
+        l1dir.rt_power = l1dir.rt_power + l1dirarray[i].rt_power * pppm_t;
+        rt_power = rt_power + l1dirarray[i].rt_power;
+      }
+    }
+  }
+
+  //l2 directory
+  if (numL2Dir > 0) {
+    for (i = 0; i < numL2Dir; i++) {
+      // l2dirarray[i].set_params(XML, i, &interface_ip, L2Directory);
+      l2dirarray[i].set_stats(XML);
+
+      l2dirarray[i].computeStaticPower(true);
+      l2dirarray[i].computeStaticPower();
+      if (procdynp.homoL2Dir) {
+        set_pppm(pppm_t,
+                 l2dirarray[i].cachep.clockRate * procdynp.numL2Dir,
+                 procdynp.numL2Dir,
+                 procdynp.numL2Dir,
+                 procdynp.numL2Dir);
+        l2dir.power = l2dir.power + l2dirarray[i].power * pppm_t;
+
+        set_pppm(pppm_t,
+                 1 / l2dirarray[i].cachep.executionTime,
+                 procdynp.numL2Dir,
+                 procdynp.numL2Dir,
+                 procdynp.numL2Dir);
+        l2dir.rt_power = l2dir.rt_power + l2dirarray[i].rt_power * pppm_t;
+        power = power + l2dir.power;
+        rt_power = rt_power + l2dir.rt_power;
+      } 
+      else {
+        set_pppm(pppm_t, l2dirarray[i].cachep.clockRate, 1, 1, 1);
+        l2dir.power = l2dir.power + l2dirarray[i].power * pppm_t;
+        power = power + l2dirarray[i].power * pppm_t;
+
+        set_pppm(pppm_t, 1 / l2dirarray[i].cachep.executionTime, 1, 1, 1);
+        l2dir.rt_power = l2dir.rt_power + l2dirarray[i].rt_power * pppm_t;
+        rt_power = rt_power + l2dirarray[i].rt_power * pppm_t;
+      }
+    }
+  }
+
+  // Memory Controllers:
+  if (XML->sys.mc.number_mcs > 0 && XML->sys.mc.memory_channels_per_mc > 0) {
+    // mc.set_params(XML, &interface_ip, MC);
+    mc.set_stats(XML);
+
+    mc.computeStaticPower();
+    // mc.set_stats(XML);
+    mc.computeDynamicPower();
+    set_pppm(pppm_t,
+             XML->sys.mc.number_mcs * mc.mcp.clockRate,
+             XML->sys.mc.number_mcs,
+             XML->sys.mc.number_mcs,
+             XML->sys.mc.number_mcs);
+    mcs.power = mc.power * pppm_t;
+    power = power + mcs.power;
+    set_pppm(pppm_t,
+             1 / mc.mcp.executionTime,
+             XML->sys.mc.number_mcs,
+             XML->sys.mc.number_mcs,
+             XML->sys.mc.number_mcs);
+    mcs.rt_power = mc.rt_power * pppm_t;
+    rt_power = rt_power + mcs.rt_power;
+  }
+
+  // Flash Controller:
+  if (XML->sys.flashc.number_mcs > 0) {
+    // flashcontroller.set_params(XML, &interface_ip);
+    flashcontroller.set_stats(XML);
+
+    flashcontroller.computeStaticPower();
+    flashcontroller.computeDynamicPower();
+    double number_fcs = flashcontroller.fcp.num_mcs;
+
+    set_pppm(pppm_t, number_fcs, number_fcs, number_fcs, number_fcs);
+    flashcontrollers.power = flashcontroller.power * pppm_t;
+    power = power + flashcontrollers.power;
+
+    set_pppm(pppm_t, number_fcs, number_fcs, number_fcs, number_fcs);
+    flashcontrollers.rt_power = flashcontroller.rt_power * pppm_t;
+    rt_power = rt_power + flashcontrollers.rt_power;
+  }
+
+  // Network Interface Unit:
+  if (XML->sys.niu.number_units > 0) {
+    // niu.set_params(XML, &interface_ip);
+    niu.computeStaticPower();
+    set_pppm(pppm_t,
+             XML->sys.niu.number_units * niu.niup.clockRate,
+             XML->sys.niu.number_units,
+             XML->sys.niu.number_units,
+             XML->sys.niu.number_units);
+    niu.set_stats(XML);
+    niu.computeDynamicPower();
+    nius.power = niu.power * pppm_t;
+    power = power + nius.power;
+    set_pppm(pppm_t,
+             XML->sys.niu.number_units * niu.niup.clockRate,
+             XML->sys.niu.number_units,
+             XML->sys.niu.number_units,
+             XML->sys.niu.number_units);
+    nius.rt_power = niu.rt_power * pppm_t;
+    rt_power = rt_power + nius.rt_power;
+  }
+
+  // PCIe Controller:
+  if (XML->sys.pcie.number_units > 0 && XML->sys.pcie.num_channels > 0) {
+    // pcie.set_params(XML, &interface_ip);
+    set_pppm(pppm_t,
+             XML->sys.pcie.number_units * pcie.pciep.clockRate,
+             XML->sys.pcie.number_units,
+             XML->sys.pcie.number_units,
+             XML->sys.pcie.number_units);
+
+    pcie.set_stats(XML);
+    pcie.computeStaticPower();
+    pcie.computeDynamicPower();
+    pcies.power = pcie.power * pppm_t;
+    power = power + pcies.power;
+    set_pppm(pppm_t,
+             XML->sys.pcie.number_units * pcie.pciep.clockRate,
+             XML->sys.pcie.number_units,
+             XML->sys.pcie.number_units,
+             XML->sys.pcie.number_units);
+    pcies.rt_power = pcie.rt_power * pppm_t;
+    rt_power = rt_power + pcies.rt_power;
+  }
+
+  // Compute energy of NoC (w or w/o links) or buses
+  for (i = 0; i < numNOC; i++) {
+    nocs[i].computePower(true);
+    nocs[i].computeRuntimeDynamicPower();
+    if (procdynp.homoNOC) {
+      set_pppm(pppm_t,
+                procdynp.numNOC * nocs[i].nocdynp.clockRate,
+                procdynp.numNOC,
+                procdynp.numNOC,
+                procdynp.numNOC);
+      noc.power = noc.power + nocs[i].power * pppm_t;
+      set_pppm(pppm_t,
+                1 / nocs[i].nocdynp.executionTime,
+                procdynp.numNOC,
+                procdynp.numNOC,
+                procdynp.numNOC);
+      noc.rt_power = noc.rt_power + nocs[i].rt_power * pppm_t;
+      power = power + noc.power;
+      rt_power = rt_power + noc.rt_power;
+    } else {
+      set_pppm(pppm_t, nocs[i].nocdynp.clockRate, 1, 1, 1);
+      noc.power = noc.power + nocs[i].power * pppm_t;
+      power = power + nocs[i].power * pppm_t;
+      set_pppm(pppm_t, 1 / nocs[i].nocdynp.executionTime, 1, 1, 1);
+      noc.rt_power = noc.rt_power + nocs[i].rt_power * pppm_t;
+      rt_power = rt_power + nocs[i].rt_power * pppm_t;
+    }
+  }
+
+}
+
+void Processor::reset(){
+  int i;
+  Component::reset();
+
+  core.Component::reset();
+  for (i = 0; i < numCore; i++) {
+    cores[i].reset();
+  }
+  
+  if (!XML->sys.Private_L2) {
+    if (numL2 > 0) {
+      l2.reset();
+      for (i = 0; i < numL2; i++) {
+        l2array[i].reset();
+        l2array[i].reset();
+      }
+    }
+  }
+  if (numL3 > 0) {
+      l3.reset();
+      for (i = 0; i < numL3; i++) {
+        l3array[i].reset();
+      }
+  }
+
+  if (numL1Dir > 0) {
+    l1dir.reset();
+    for (i = 0; i < numL1Dir; i++) {
+      l1dirarray[i].reset();
+    }
+  }
+
+  //l2 directory
+  if (numL2Dir > 0) {
+    l2dir.reset();
+    for (i = 0; i < numL2Dir; i++) {
+      l2dirarray[i].reset();
+    }
+  }
+
+  // Component noc;
+  // Component mcs;
+  // Component cc;
+  // Component nius;
+  // Component pcies;
+
+  if (XML->sys.mc.number_mcs > 0 && XML->sys.mc.memory_channels_per_mc > 0) {
+    mcs.reset();
+    mc.reset();
+  }
+
+  // Flash Controller:
+  if (XML->sys.flashc.number_mcs > 0) {
+    flashcontroller.reset();
+    flashcontrollers.reset();
+  }
+  // Network Interface Unit:
+  if (XML->sys.niu.number_units > 0) {
+    niu.reset();
+    nius.reset();
+  }
+  // PCIe Controller:
+  if (XML->sys.pcie.number_units > 0 && XML->sys.pcie.num_channels > 0) {
+    pcie.reset();
+    pcies.reset();
+
+  }
+  // Compute energy of NoC (w or w/o links) or buses
+  noc.reset();
+  for (i = 0; i < numNOC; i++) {
+    nocs[i].reset();
+  }
+
+}
 void Processor::displayDeviceType(int device_type_, uint32_t indent) {
   string indent_str(indent, ' ');
 

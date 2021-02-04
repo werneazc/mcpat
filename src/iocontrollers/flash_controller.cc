@@ -198,6 +198,12 @@ void FlashController::computeDynamicPower() {
   rt_power.readOp.dynamic *= fcp.perc_load;
 }
 
+void FlashController::reset(){
+  power_t.reset();
+  Component::reset();
+}
+
+
 /*
  * display(uint32_t, bool)
  *    Display the Power, Area, and Timing results to the standard output

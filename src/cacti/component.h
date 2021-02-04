@@ -64,7 +64,9 @@ public:
   double compute_tr_width_after_folding(double input_width,
                                         double threshold_folding_width);
   double height_sense_amplifier(double pitch_sense_amp);
-
+  void reset();
+  void reset_dynamic();
+  
 protected:
   int logical_effort(int num_gates_min,
                      double g,

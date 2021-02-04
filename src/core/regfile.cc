@@ -354,6 +354,13 @@ void RegFU::computeDynamicPower(bool is_tdp) {
     }
   }
 }
+void RegFU::reset() {
+     Component::reset();
+     IRF.reset();
+     FRF.reset();
+     RFWIN.reset();
+}
+
 
 void RegFU::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
   if (!exist)

@@ -232,6 +232,11 @@ void NIUController::computeDynamicPower() {
   rt_power.readOp.dynamic *= niup.perc_load;
 }
 
+void NIUController::reset(){
+  power_t.reset();
+  Component::reset();
+}
+
 /*
  * display(uint32_t, bool)
  *    Display the Power, Area, and Timing results to the standard output

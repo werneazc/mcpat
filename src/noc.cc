@@ -258,7 +258,7 @@ void NoC::computePower(bool cp) {
   }
 }
 
-void NoC::computeRuntimeDynamicPower() {
+void NoC::computeRuntimeDynamicPower() {  
   double pppm_t[4] = {1, 1, 1, 1};
   // init stats for runtime power (RTP)
   stats_t.readAc.access = total_accesses;
@@ -287,6 +287,19 @@ void NoC::computeRuntimeDynamicPower() {
     link_bus.rt_power = link_bus.power * pppm_t;
     rt_power = rt_power + link_bus.rt_power;
   }
+}
+
+void NoC::reset() {
+  Component::reset();
+  router.reset_dynamic();
+  router.arbiter.reset_dynamic();
+  router.crossbar.reset_dynamic();
+  router.buffer.reset_dynamic();
+
+  // link_bus.reset();
+  // link_bus_tot_per_Router.reset();
+  // power_t.reset();
+
 }
 
 void NoC::display(uint32_t indent, int plevel, bool is_tdp) {

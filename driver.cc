@@ -28,78 +28,83 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.”
  *
  ***************************************************************************/
-#include "XML_Parse.h"
-#include "globalvar.h"
-#include "io.h"
-#include "options.h"
+
+// #include "mcpat/XML_Parse.h"
+// #include "globalvar.h"
+// #include "io.h"
+// #include "options.h"
 #include "processor.h"
-#include "version.h"
-#include "xmlParser.h"
+// #include "version.h"
+// #include "xmlParser.h"
 #include <chrono>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
+// #include <boost/archive/text_iarchive.hpp>
+// #include <boost/archive/text_oarchive.hpp>
 #include <fstream>
 #include <iostream>
 
-void save(const Processor &s, std::string name) {
-  // Make an archive
-  std::ofstream ofs(name.c_str());
-  boost::archive::text_oarchive oa(ofs);
-  oa << s;
-}
+// void save(const Processor &s, std::string name) {
+//   // Make an archive
+//   std::ofstream ofs(name.c_str());
+//   boost::archive::text_oarchive oa(ofs);
+//   oa << s;
+// }
 
-void restore(Processor &s, std::string name) {
-  // Restore from the Archive
-  // std::cerr << "Archive " << name << "\n";
-  std::ifstream ifs(name.c_str());
-  if (ifs.good()) {
-    boost::archive::text_iarchive ia(ifs);
-    ia >> s;
-  } else {
-    std::cerr << "Archive " << name << " cannot be used\n";
-    assert(false);
-  }
-}
+// void restore(Processor &s, std::string name) {
+//   // Restore from the Archive
+//   // std::cerr << "Archive " << name << "\n";
+//   std::ifstream ifs(name.c_str());
+//   if (ifs.good()) {
+//     boost::archive::text_iarchive ia(ifs);
+//     ia >> s;
+//   } else {
+//     std::cerr << "Archive " << name << " cannot be used\n";
+//     assert(false);
+//   }
+// }
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-  mcpat::Options opt;
-  if (!opt.parse(argc, argv)) {
-    return 1;
-  }
+  // mcpat::Options opt;
+  // if (!opt.parse(argc, argv)) {
+  //   return 1;
+  // }
 
-  opt_for_clk = opt.opt_for_clk;
+  // opt_for_clk = opt.opt_for_clk;
 
-  cout << "McPAT (version " << VER_MAJOR << "." << VER_MINOR << " of "
-       << VER_UPDATE << ") is computing the target processor...\n " << endl;
+  // cout << "McPAT (version " << VER_MAJOR << "." << VER_MINOR << " of "
+  //      << VER_UPDATE << ") is computing the target processor...\n " << endl;
 
-  // parse XML-based interface
-  ParseXML *p1 = new ParseXML();
-  Processor proc;
+  // // parse XML-based interface
+  // ParseXML *p1 = new ParseXML();
+  // Processor proc;
 
-  p1->parse(opt.input_xml);
+  // auto start = chrono::high_resolution_clock::now(); 
+  // p1->parse(opt.input_xml);
+  // auto end = chrono::high_resolution_clock::now(); 
+  // auto duration = chrono::duration_cast<chrono::microseconds>(end - start); 
+  // cout << duration.count() << endl; 
 
-  if (opt.serialization_create) {
-    proc.init(p1);
-    save(proc, opt.serialization_file);
-    std::cout << "Checkpoint generated @: " << opt.serialization_file << "\n";
-    return 0;
-  } else if (opt.serialization_restore) {
-    restore(proc, opt.serialization_file);
-    proc.init(p1, true);
-  } else {
-    proc.init(p1);
-  }
+  // if (opt.serialization_create) {
+  //   proc.init(p1);
+  //   save(proc, opt.serialization_file);
+  //   std::cout << "Checkpoint generated @: " << opt.serialization_file << "\n";
+  //   return 0;
+  // } else if (opt.serialization_restore) {
+  //   restore(proc, opt.serialization_file);
+  //   proc.init(p1, true);
+  // } else {
+  //   proc.init(p1);
+  // }
   
   // start = chrono::high_resolution_clock::now(); 
   // proc.compute();
   // end = chrono::high_resolution_clock::now(); 
   // duration = chrono::duration_cast<chrono::microseconds>(end - start); 
   // cout << duration.count() << endl; 
-  proc.displayEnergy(2, opt.print_level);
+  // // proc.displayEnergy(2, opt.print_level);
 
 
-  delete p1;
-  return 0;
+  // delete p1;
+  // return 0;
 }

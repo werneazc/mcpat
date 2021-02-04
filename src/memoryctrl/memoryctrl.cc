@@ -35,6 +35,7 @@
 #include "basic_components.h"
 #include "const.h"
 #include "io.h"
+#include "mc_backend.h"
 #include "parameter.h"
 
 #include <algorithm>
@@ -84,6 +85,9 @@ MemoryController::MemoryController() {
 void MemoryController::set_params(const ParseXML *XML,
                                   InputParameter *interface_ip_,
                                   enum MemoryCtrl_type mc_type_) {
+
+
+                                    
   long_channel = XML->sys.longer_channel_device;
   power_gating = XML->sys.power_gating;
   interface_ip = *interface_ip_;
@@ -101,6 +105,8 @@ void MemoryController::set_params(const ParseXML *XML,
     PHY.set_params(XML, mcp, &interface_ip, mc_type);
   }
   init_params = true;
+
+
 }
 
 void MemoryController::set_stats(const ParseXML *XML) {
@@ -169,6 +175,16 @@ void MemoryController::computeDynamicPower() {
   if (mcp.type == 0 || (mcp.type == 1 && mcp.withPHY)) {
     rt_power = rt_power + PHY.rt_power;
   }
+}
+void MemoryController::reset(){
+  // Component::reset();
+  // frontend.reset();
+  // frontend.frontendBuffer.reset();
+  // frontend.readBuffer.reset();
+  // frontend.writeBuffer.reset();
+  // transecEngine.power_t.reset();
+
+  // PHY.reset_dynamic();
 }
 
 void MemoryController::display(uint32_t indent, bool enable) {

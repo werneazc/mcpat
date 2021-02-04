@@ -1,0 +1,22 @@
+import os
+
+def AllSources(node='.', pattern='*'):
+    result = [AllSources(dir, pattern)
+              for dir in Glob(str(node)+'/*')
+              if dir.isdir()]
+    result += [source
+               for source in Glob(str(node)+'/'+pattern)
+               if (source.isfile() and 'main' not in str(source))]
+    return result
+
+env = Environment()
+
+LAUNCHDIR = GetLaunchDir()
+includes = ['src/cache', 'src/cacti',
+    'src/cacti/decoder', 'src/core', 'src/iocontrollers', 
+    'src/logic', 'src/memoryctrl', 'src']
+g_include = []
+
+for i in includes:
+    g_include.append(os.path.join(LAUNCHDIR,i))
+env.Library('mcpat', source=AllSources(os.path.join(LAUNCHDIR,'src'), '*.cc'))

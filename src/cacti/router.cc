@@ -130,6 +130,14 @@ void Router::init(double flit_size_,
   calc_router_parameters();
 }
 
+void Router::reset() {
+  Component::reset();
+  arbiter.reset();
+  crossbar.reset();
+  buffer.reset();
+}
+
+
 Router::~Router() {}
 
 double // wire cap with triple spacing

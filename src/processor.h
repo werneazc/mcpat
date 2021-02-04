@@ -59,6 +59,8 @@ public:
   Processor();
   void init(const ParseXML *XML, bool cp = false);
   void displayEnergy(uint32_t indent = 0, int plevel = 100, bool is_tdp = true);
+  void compute();
+  void reset();
   ~Processor();
 
 private:

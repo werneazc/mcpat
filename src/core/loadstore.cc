@@ -680,6 +680,13 @@ void LoadStoreU::computeDynamicPower(bool is_tdp) {
   }
 }
 
+void LoadStoreU::reset() {
+  Component::reset();
+  LSQ.reset();
+  LoadQ.reset();
+}
+
+
 void LoadStoreU::display(uint32_t indent, int plevel, bool is_tdp) {
   if (!exist)
     return;

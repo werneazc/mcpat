@@ -69,6 +69,7 @@ public:
   void computeStaticPower();
   void computeDynamicPower(bool is_tdp);
   void displayEnergy(uint32_t indent = 0, int plevel = 100, bool is_tdp = true);
+  void reset();
   ~MemManU();
 
 private:

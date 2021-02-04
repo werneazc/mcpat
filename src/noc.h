@@ -83,6 +83,7 @@ public:
   void displayEnergy_link_bus(uint32_t indent = 0,
                               int plevel = 100,
                               bool is_tdp = true);
+  void reset();
   ~NoC();
 
 private:

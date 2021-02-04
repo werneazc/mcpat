@@ -106,6 +106,7 @@ void MCBackend::computeArea() {
  *      None
  */
 void MCBackend::computeStaticPower() {
+  
   // double max_row_addr_width = 20.0;//Current address 12~18bits
   double C_MCB = 0.0;
   double mc_power = 0.0;
@@ -189,6 +190,16 @@ void MCBackend::computeStaticPower() {
   power_t.readOp.power_gated_leakage = power_t.readOp.leakage * pg_reduction;
   power_t.readOp.power_gated_with_long_channel_leakage =
       power_t.readOp.power_gated_leakage * long_channel_device_reduction;
+
+  // std::cout<<"TRANSACTION BACKEND" << std::endl;
+  // std::cout<< power_t.readOp.power_gated_leakage << std::endl;
+  // std::cout<< power_t.readOp.power_gated_with_long_channel_leakage << std::endl;
+  // std::cout<< power_t.readOp.longer_channel_leakage << std::endl;
+  // std::cout<< power_t.readOp.gate_leakage << std::endl;
+  // std::cout<< power_t.readOp.leakage << std::endl;
+  // std::cout<< power_t.readOp.dynamic << std::endl;
+  // std::cout<<"TRANSACTION BACKEND" << std::endl;
+
 }
 
 /*
@@ -254,6 +265,7 @@ void MCBackend::set_params(const ParseXML *XML,
                            const MCParam &mcp_,
                            InputParameter *interface_ip,
                            const enum MemoryCtrl_type mc_type_) {
+                             
   long_channel = XML->sys.longer_channel_device;
   power_gating = XML->sys.power_gating;
   mcp = mcp_;

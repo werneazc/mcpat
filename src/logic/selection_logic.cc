@@ -184,3 +184,8 @@ void selection_logic::selection_power() { // based on cost effective superscalar
        ) *
       g_tp.peri_global.Vdd;
 }
+
+void selection_logic::reset() {
+    Component::reset();
+}
+

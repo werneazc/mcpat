@@ -78,6 +78,7 @@ public:
   // thread_clock_gated; 	bool in_order, multithreaded;
   void computeArea();
   void compute_stage_vector();
+  void reset();
   ~Pipeline() { local_result.cleanup(); };
 
 private:

@@ -77,6 +77,7 @@ public:
                           enum Core_type core_ty_ = Inorder,
                           bool _is_default = true);
   virtual void computeArea();
+  virtual void reset();
   virtual ~ArrayST();
 
 protected:

@@ -84,7 +84,7 @@ public:
   void computeRuntimeDynamicPower();
   void display(uint32_t indent = 0, bool enable = true);
   void leakage_feedback(double temperature);
-
+  void reset();
 private:
   bool init_params;
   bool init_stats;

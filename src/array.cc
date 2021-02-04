@@ -426,4 +426,10 @@ void ArrayST::leakage_feedback(
   }
 }
 
+void ArrayST::reset(){
+  power.reset();
+  rt_power.reset();
+  power_t.reset();
+}
+
 ArrayST::~ArrayST() { local_result.cleanup(); }

@@ -240,3 +240,7 @@ void Pipeline::compute_stage_vector() {
     }
   }
 }
+
+void Pipeline::reset() {
+  Component::reset();
+}

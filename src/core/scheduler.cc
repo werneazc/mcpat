@@ -823,4 +823,13 @@ void SchedulerU::computeDynamicPower(bool is_tdp) {
   //	cout<<"selection"<<instruction_selection.power.readOp.dynamic<<"leakage"<<instruction_selection.power.readOp.leakage<<endl;
 }
 
+void SchedulerU::reset() {
+  Component::reset();
+  int_inst_window.reset();
+  fp_inst_window.reset();
+  ROB.reset();
+  instruction_selection.reset();
+}
+
+
 SchedulerU ::~SchedulerU() {}

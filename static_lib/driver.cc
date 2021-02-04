@@ -78,7 +78,11 @@ int main(int argc, char *argv[]) {
   ParseXML *p1 = new ParseXML();
   Processor proc;
 
+  auto start = chrono::high_resolution_clock::now(); 
   p1->parse(opt.input_xml);
+  auto end = chrono::high_resolution_clock::now(); 
+  auto duration = chrono::duration_cast<chrono::microseconds>(end - start); 
+  cout << duration.count() << endl; 
 
   if (opt.serialization_create) {
     proc.init(p1);
@@ -92,12 +96,12 @@ int main(int argc, char *argv[]) {
     proc.init(p1);
   }
   
-  // start = chrono::high_resolution_clock::now(); 
-  // proc.compute();
-  // end = chrono::high_resolution_clock::now(); 
-  // duration = chrono::duration_cast<chrono::microseconds>(end - start); 
-  // cout << duration.count() << endl; 
-  proc.displayEnergy(2, opt.print_level);
+  start = chrono::high_resolution_clock::now(); 
+  proc.compute();
+  end = chrono::high_resolution_clock::now(); 
+  duration = chrono::duration_cast<chrono::microseconds>(end - start); 
+  cout << duration.count() << endl; 
+  // proc.displayEnergy(2, opt.print_level);
 
 
   delete p1;

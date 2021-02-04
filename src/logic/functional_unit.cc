@@ -249,6 +249,13 @@ void FunctionalUnit::computeRuntimeDynamicPower() {
   rt_power.searchOp.dynamic *= sckRation;
 }
 
+void FunctionalUnit::reset() {
+  Component::reset();
+  power_t.reset();
+}
+
+
+
 void FunctionalUnit::display(uint32_t indent, bool enable) {
   string indent_str(indent, ' ');
   string indent_str_next(indent + 2, ' ');

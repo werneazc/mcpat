@@ -57,6 +57,7 @@ public:
   void computeArea();
   void computeStaticPower();
   void computeDynamicPower();
+  void reset();
   void display(uint32_t indent = 0, bool enable = true);
 
 private:

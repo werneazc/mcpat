@@ -211,8 +211,7 @@ void Core::computeDynamicPower(bool is_tdp) {
           coredynp.num_pipelines / num_units,
           coredynp.num_pipelines / num_units,
           coredynp.num_pipelines / num_units,
-          coredynp.num_pipelines /
-              num_units); // User need to feed a duty cycle to improve accuracy
+          coredynp.num_pipelines / num_units); // User need to feed a duty cycle to improve accuracy
       if (rnu.exist) {
         rnu.power = rnu.power + corepipe.power * pppm_t;
         power = power + rnu.power;
@@ -398,6 +397,19 @@ void Core::computeDynamicPower(bool is_tdp) {
     }
   }
 }
+
+void Core::reset() {
+  Component::reset();
+  ifu.reset();
+  rnu.reset();
+  lsu.reset();
+  mmu.reset();
+  exu.reset();
+  // corepipe.reset();
+  // undiffCore.reset();
+  // l2cache.reset();
+}
+
 
 void Core::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
   string indent_str(indent, ' ');

@@ -78,6 +78,7 @@ public:
                   enum Device_ty device_ty_ = Core_device,
                   enum Core_type core_ty_ = Inorder);
   void selection_power();
+  void reset();
   void leakage_feedback(double temperature); // TODO
 
 private:

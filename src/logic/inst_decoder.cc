@@ -227,6 +227,20 @@ void inst_decoder::leakage_feedback(double temperature) {
   power.readOp.power_gated_with_long_channel_leakage =
       power.readOp.power_gated_leakage * long_channel_device_reduction;
 }
+void inst_decoder::reset(){
+  Component::reset();
+  power_t.reset();
+
+  final_dec.reset();
+  pre_dec.reset();
+  // pre_dec.block_power.reset();
+  // pre_dec.driver_power.reset();
+  predec_blk1.reset();
+  predec_blk2.reset();
+  predec_blk_drv1.reset();
+  predec_blk_drv2.reset();
+}
+
 
 inst_decoder::~inst_decoder() {
   local_result.cleanup();

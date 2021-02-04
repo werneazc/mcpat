@@ -645,6 +645,17 @@ void InstFetchU::computeDynamicPower(bool is_tdp) {
         rt_power + (ID_inst.rt_power + ID_operand.rt_power + ID_misc.rt_power);
   }
 }
+void InstFetchU::reset() {
+    Component::reset();
+    icache.reset();
+    IB.reset();
+    BTB.reset();
+    BPT.reset();;
+
+    ID_inst.reset();
+    ID_misc.reset();
+    ID_operand.reset();
+}
 
 void InstFetchU::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
   if (!exist)

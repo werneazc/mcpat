@@ -568,6 +568,23 @@ void EXECU::computeDynamicPower(bool is_tdp) {
   }
 }
 
+void EXECU::reset() {
+  Component::reset();
+  rfu.reset();
+  scheu.reset();
+  fp_u.reset();
+  exeu.reset();
+  mul.reset();
+  int_bypass.reset();
+  intTagBypass.reset();
+  int_mul_bypass.reset();
+  intTag_mul_Bypass.reset();
+  fp_bypass.reset();
+  fpTagBypass.reset();
+  // bypass.reset();
+}
+ 
+
 void EXECU::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
   if (!exist)
     return;

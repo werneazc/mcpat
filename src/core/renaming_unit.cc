@@ -1194,7 +1194,16 @@ void RENAMINGU::computeStaticPower(bool is_tdp) {
     }
   }
 }
-
+void RENAMINGU::reset(){
+  power.reset();
+  rt_power.reset();
+  iFRAT.reset();
+  fFRAT.reset();
+  iRRAT.reset();
+  fRRAT.reset();
+  ifreeL.reset();
+  ffreeL.reset();
+}
 void RENAMINGU::display(uint32_t indent, int plevel, bool is_tdp) {
   if (!exist) {
     return;

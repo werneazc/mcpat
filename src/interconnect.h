@@ -98,7 +98,8 @@ public:
   bool pipelinable;
   double route_over_perc;
   int num_pipe_stages;
-
+  
+  void reset();
 private:
   void compute();
 

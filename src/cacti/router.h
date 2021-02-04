@@ -67,7 +67,7 @@ public:
             double I_ = 5,
             double O_ = 5,
             double M_ = 0.6);
-
+  void reset();
   void print_router();
 
   Component arbiter, crossbar, buffer;

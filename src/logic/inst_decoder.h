@@ -34,6 +34,7 @@ public:
                   enum Device_ty device_ty_ = Core_device,
                   enum Core_type core_ty_ = Inorder);
   inst_decoder() { init_params = false; };
+
   bool is_default;
   int opcode_length;
   int num_decoders;
@@ -62,6 +63,7 @@ public:
   void inst_decoder_delay_power();
   ~inst_decoder();
   void leakage_feedback(double temperature);
+  void reset();
 
 private:
   bool init_params;

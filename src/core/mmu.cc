@@ -236,6 +236,12 @@ void MemManU::computeDynamicPower(bool is_tdp) {
   }
 }
 
+void MemManU::reset(){
+  Component::reset();
+  itlb.reset();
+  dtlb.reset();
+}
+
 void MemManU::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
   if (!exist)
     return;

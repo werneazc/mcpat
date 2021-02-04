@@ -72,6 +72,7 @@ public:
   void computeStaticPower(bool is_tdp = true);
   void computeDynamicPower(); // TODO; add this
   void display(uint32_t indent = 0, int plevel = 100, bool is_tdp = true);
+  void reset();
   ~RENAMINGU();
 
 private:

@@ -215,7 +215,9 @@ void interconnect::compute() {
     delete wtemp1;
   }
 }
-
+ void interconnect::reset(){
+   Component::reset();
+ }
 // void interconnect::leakage_feedback(
 //    double temperature) // TODO: add code for processing power gating
 //{
