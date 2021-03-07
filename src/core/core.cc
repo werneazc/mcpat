@@ -57,7 +57,7 @@ void Core::set_params(const ParseXML *XML_interface,
   ithCore = ithCore_;
   interface_ip = *interface_ip_;
 
-  bool exit_flag = true;
+  bool exit_flag = false;
 
   //  interface_ip.wire_is_mat_type = 2;
   //  interface_ip.wire_os_mat_type = 2;
@@ -81,7 +81,7 @@ void Core::set_params(const ParseXML *XML_interface,
   //mmu.set_stats(XML);
 
   exu.set_params(
-      XML, ithCore, &interface_ip, lsu.lsq_height, coredynp, exit_flag);
+      XML, ithCore, &interface_ip, lsu.lsq_height, coredynp, true);
   //exu.set_stats(XML);
 
   undiffCore.set_params(XML, ithCore, &interface_ip, coredynp, exit_flag);
