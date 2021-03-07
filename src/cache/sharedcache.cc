@@ -236,6 +236,23 @@ void SharedCache::set_params(const ParseXML *XML,
     tag = XML->sys.physical_address_width + EXTRA_TAG_BITS;
     interface_ip.num_search_ports = 1;
   } else {
+
+      if (cacheL == L3)  // Hack to support VCGRA architecture
+      {
+        interface_ip.num_rd_ports = XML->sys.L3[ithCache].ports[0];
+        interface_ip.num_wr_ports = XML->sys.L3[ithCache].ports[1];
+        interface_ip.num_rw_ports = XML->sys.L3[ithCache].ports[2];
+        interface_ip.num_se_rd_ports = XML->sys.L3[ithCache].ports[3];
+        interface_ip.num_search_ports = XML->sys.L3[ithCache].ports[3];
+        interface_ip.ndbl = 2;
+      }
+      else {
+        interface_ip.num_rw_ports = 1; // lower level cache usually has one port.
+        interface_ip.num_rd_ports = 0;
+        interface_ip.num_wr_ports = 0;
+        interface_ip.num_se_rd_ports = 0;
+      }
+
     idx = debug ? 9 : int(ceil(log2(size / line / assoc)));
     tag = debug ? 51
                 : XML->sys.physical_address_width - idx -
@@ -249,7 +266,7 @@ void SharedCache::set_params(const ParseXML *XML,
     }
   }
   //  if (XML->sys.first_level_dir==2)
-  //	  tag += int(XML->sys.domain_size + 5);
+  //  tag += int(XML->sys.domain_size + 5);
   interface_ip.specific_tag = 1;
   interface_ip.tag_w = tag;
   interface_ip.cache_sz = (int)size;
@@ -267,10 +284,10 @@ void SharedCache::set_params(const ParseXML *XML,
   interface_ip.obj_func_dyn_power = 0;
   interface_ip.obj_func_leak_power = 0;
   interface_ip.obj_func_cycle_t = 1;
-  interface_ip.num_rw_ports = 1; // lower level cache usually has one port.
-  interface_ip.num_rd_ports = 0;
-  interface_ip.num_wr_ports = 0;
-  interface_ip.num_se_rd_ports = 0;
+  //  interface_ip.num_rw_ports = 1;  // lower level cache usually has one port.
+  //  interface_ip.num_rd_ports = 0;
+  //  interface_ip.num_wr_ports = 0;
+  //  interface_ip.num_se_rd_ports = 0;
   //  interface_ip.force_cache_config  =true;
   //  interface_ip.ndwl = 4;
   //  interface_ip.ndbl = 8;
