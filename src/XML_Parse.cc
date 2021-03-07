@@ -3081,7 +3081,7 @@ void ParseXML::parse(std::string filepath) {
         if (strcmp(xNode3.getChildNode("param", k).getAttribute("name"),
                    "peak_transfer_rate") == 0) {
           sys.mc.peak_transfer_rate =
-              atoi(xNode3.getChildNode("param", k).getAttribute("value"));
+              atof(xNode3.getChildNode("param", k).getAttribute("value"));
           continue;
         }
         if (strcmp(xNode3.getChildNode("param", k).getAttribute("name"),
@@ -3328,7 +3328,7 @@ void ParseXML::parse(std::string filepath) {
         if (strcmp(xNode3.getChildNode("param", k).getAttribute("name"),
                    "peak_transfer_rate") == 0) {
           sys.flashc.peak_transfer_rate =
-              atoi(xNode3.getChildNode("param", k).getAttribute("value"));
+              atof(xNode3.getChildNode("param", k).getAttribute("value"));
           continue;
         }
         //				if
