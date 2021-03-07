@@ -76,6 +76,10 @@ void CacheDynParam::set_params_l3_cache(const ParseXML *XML,
   this->fu_size = XML->sys.L3[ithCache].buffer_sizes[1];
   this->prefetchb_size = XML->sys.L3[ithCache].buffer_sizes[2];
   this->wbb_size = XML->sys.L3[ithCache].buffer_sizes[3];
+  this->missb_size    = XML->sys.L3[ithCache].buffer_sizes[0];
+  this->fu_size       = XML->sys.L3[ithCache].buffer_sizes[1];
+  this->prefetchb_size= XML->sys.L3[ithCache].buffer_sizes[2];
+  this->wbb_size      = XML->sys.L3[ithCache].buffer_sizes[3];
   this->duty_cycle = XML->sys.L3[ithCache].duty_cycle;
   if (!XML->sys.L2[ithCache].merged_dir) {
     this->dir_ty = NonDir;
