@@ -66,8 +66,8 @@ void EXECU::set_params(const ParseXML *XML_interface,
   }
   clockRate = coredynp.clockRate;
   executionTime = coredynp.executionTime;
-  rfu.set_params(XML, ithCore, &interface_ip, coredynp);
-  scheu.set_params(XML, ithCore, &interface_ip, coredynp);
+  rfu.set_params(XML, ithCore, &interface_ip, coredynp, false);
+  scheu.set_params(XML, ithCore, &interface_ip, coredynp, false);
   exeu.set_params(XML, ithCore, &interface_ip, coredynp, ALU);
 
   if (coredynp.num_fpus > 0) {
@@ -110,9 +110,22 @@ void EXECU::computeArea() {
                  "computeArea()\n";
     exit(1);
   }
-  rfu.computeArea();
 
-  scheu.computeArea();
+  // VCGRA-Hack (unused in condifguration)
+  if(rfu.exist){
+    rfu.computeArea();
+  }
+  else {
+    rfu.area.set_area(0.0);
+  }
+
+  // VCGRA-Hack (unused in condifguration)
+  if(scheu.exist) {
+    scheu.computeArea();
+  }
+  else {
+    scheu.area.set_area(0.0);
+  }
 
   exeu.computeArea();
 

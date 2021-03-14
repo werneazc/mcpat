@@ -74,10 +74,18 @@ void Core::set_params(const ParseXML *XML_interface,
 
   lsu.set_params(XML, ithCore, &interface_ip, coredynp, exit_flag);
   if (!cp) {
-    lsu.computeArea(); // done on purpose because the exu unit is dependent on
-                       // the lsu.lsq_height which is set in compute area
+    // VCGRA-Hack to support architecture
+    if(!exit_flag){
+      lsu.lsq_height = 0;
+    }
+    else {
+      lsu.computeArea(); // done on purpose because the exu unit is dependent on
+                         // the lsu.lsq_height which is set in compute area
+    }
+
   }
-  mmu.set_params(XML, ithCore, &interface_ip, coredynp);
+  // VCGRA-Hack: mmu unused for VCGRA processing elements
+  mmu.set_params(XML, ithCore, &interface_ip, coredynp, exit_flag);
   //mmu.set_stats(XML);
 
   exu.set_params(
@@ -158,8 +166,8 @@ void Core::computeArea() {
     area.set_area(area.get_area() + l2cache.area.get_area());
 
   }
-  ifu.computeArea();
   if (ifu.exist) {
+    ifu.computeArea(); //VCGRA-Hack
     ifu.area.set_area(ifu.area.get_area() + pipeline_area_per_unit);
     area.set_area(area.get_area() + ifu.area.get_area());
   }
@@ -169,8 +177,8 @@ void Core::computeArea() {
     area.set_area(area.get_area() + lsu.area.get_area());
   }
 
-  mmu.computeArea();
   if (mmu.exist) {
+    mmu.computeArea(); //VCGRA-Hack 
     mmu.area.set_area(mmu.area.get_area() + pipeline_area_per_unit);
     area.set_area(area.get_area() + mmu.area.get_area());
   }
@@ -181,8 +189,8 @@ void Core::computeArea() {
     area.set_area(area.get_area() + exu.area.get_area());
   }
 
-  undiffCore.computeArea();
   if (undiffCore.exist) {
+    undiffCore.computeArea(); //VCGRA-Hack 
     area.set_area(area.get_area() + undiffCore.area.get_area());
   }
 }
